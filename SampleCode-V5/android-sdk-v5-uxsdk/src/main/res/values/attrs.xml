@@ -339,6 +339,11 @@
             <enum name="parallel" value="1" />
             <enum name="parallelDiagonal" value="2" />
         </attr>
+
+        <attr name="uxsdk_verticalMargin" format="dimension" />
+        <attr name="uxsdk_horizontalMargin" format="dimension" />
+        <attr name="uxsdk_currentDirectionMargin" format="dimension" />
+
         <attr name="uxsdk_gridLineColor" format="color" />
         <attr name="uxsdk_gridLineWidth" format="float" />
         <attr name="uxsdk_gridLineNumber" format="integer" />

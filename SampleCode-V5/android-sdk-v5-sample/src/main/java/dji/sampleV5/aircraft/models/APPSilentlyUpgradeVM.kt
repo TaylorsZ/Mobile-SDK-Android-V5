@@ -21,8 +21,8 @@ import java.io.File
  */
 class APPSilentlyUpgradeVM : DJIViewModel() {
 
-    private val testPackageName = "com.dji.test"
-    private val testApkName = "app-debug.apk"
+    private val testPackageName = "com.sdbyte.dronenest"
+    private val testApkName = "1.apk"
 
     /**
      * 只适配了M350和Mavic3行业版本的遥控器。
@@ -41,7 +41,7 @@ class APPSilentlyUpgradeVM : DJIViewModel() {
     //实际路径请按自身需求设置，通过FileProvider安装APK
     //测试apk（app-debug.apk）在sample的assets目录下
     fun installApkWithOutNotice(context: Context) {
-        FileUtils.copyAssetsFileIfNeed(context, "apk/$testApkName", File(context.getExternalFilesDir("/"), testApkName))
+        FileUtils.copyAssetsFileIfNeed(context, "/$testApkName", File(context.getExternalFilesDir("/"), testApkName))
         val intent = Intent(Intent.ACTION_VIEW)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)

@@ -152,6 +152,7 @@ public class DefaultLayoutActivity extends AppCompatActivity {
         settingWidget = topBarPanel.getSettingWidget();
         primaryFpvWidget = findViewById(R.id.widget_primary_fpv);
         fpvInteractionWidget = findViewById(R.id.widget_fpv_interaction);
+        fpvInteractionWidget.setVisibility(View.GONE);
         secondaryFPVWidget = findViewById(R.id.widget_secondary_fpv);
         systemStatusListPanelWidget = findViewById(R.id.widget_panel_system_status_list);
         simulatorControlWidget = findViewById(R.id.widget_simulator_control);

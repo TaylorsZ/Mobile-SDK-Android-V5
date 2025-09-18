@@ -1,5 +1,6 @@
 package dji.sampleV5.aircraft.models
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import dji.sdk.keyvalue.value.common.ComponentIndexType
 import dji.v5.common.callback.CommonCallbacks
@@ -15,6 +16,7 @@ import dji.v5.manager.datacenter.livestream.settings.RtspSettings
 import dji.v5.manager.interfaces.ICameraStreamManager
 import dji.v5.utils.common.ContextUtil
 import dji.v5.utils.common.DjiSharedPreferencesManager
+import dji.v5.utils.common.LogUtils
 
 /**
  * ClassName : LiveStreamVM
@@ -139,6 +141,7 @@ class LiveStreamVM : DJIViewModel() {
                     .build()
             )
             .build()
+        Log.d(TAG, "setRTMPConfig: ${streamManager.cameraIndex}")
         DjiSharedPreferencesManager.putString(ContextUtil.getContext(), RTMP_KEY, rtmpUrl)
         setLiveStreamConfig(liveStreamConfig)
     }

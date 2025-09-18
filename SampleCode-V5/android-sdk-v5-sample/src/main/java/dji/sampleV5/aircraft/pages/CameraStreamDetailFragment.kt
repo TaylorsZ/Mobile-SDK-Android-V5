@@ -2,6 +2,7 @@ package dji.sampleV5.aircraft.pages
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Surface
 import android.view.SurfaceHolder
@@ -24,6 +25,8 @@ import dji.sdk.keyvalue.value.airlink.ChannelPriority
 import dji.sdk.keyvalue.value.camera.CameraVideoStreamSourceType
 import dji.sdk.keyvalue.value.common.ComponentIndexType
 import dji.sdk.keyvalue.value.flightassistant.VisionAssistDirection
+import dji.v5.manager.datacenter.MediaDataCenter
+import dji.v5.manager.datacenter.camera.StreamInfo
 import dji.v5.manager.interfaces.ICameraStreamManager
 import dji.v5.utils.common.LogPath
 import dji.v5.utils.common.LogUtils
@@ -82,6 +85,7 @@ class CameraStreamDetailFragment : DJIFragment() {
         super.onCreate(savedInstanceState)
         cameraIndex = ComponentIndexType.find(arguments?.getInt(KEY_CAMERA_INDEX, 0) ?: 0)
         onlyOneCamera = arguments?.getBoolean(KEY_ONLY_ONE_CAMERA, false) ?: false
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -140,7 +144,6 @@ class CameraStreamDetailFragment : DJIFragment() {
         btnStopDownloadStream.setOnClickListener {
             viewModel.stopDownloadStreamToLocal()
         }
-
         btnSetStreamEncodeBitrate.setOnClickListener {
             KeyValueDialogUtil.showInputDialog(
                 activity, "Stream Encode Bitrate(bps)",

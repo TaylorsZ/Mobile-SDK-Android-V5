@@ -3,6 +3,7 @@ package dji.sampleV5.aircraft.pages
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Surface
 import android.view.SurfaceHolder
@@ -16,6 +17,7 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import dji.sampleV5.aircraft.R
 import dji.sampleV5.aircraft.models.LiveStreamVM
 import dji.sampleV5.aircraft.util.ToastUtils
@@ -30,6 +32,12 @@ import dji.v5.manager.datacenter.livestream.VideoResolution
 import dji.v5.manager.interfaces.ICameraStreamManager
 import dji.v5.utils.common.NumberUtils
 import dji.v5.utils.common.StringUtils
+import dji.v5.manager.aircraft.simulator.InitializationSettings
+import dji.v5.manager.aircraft.simulator.SimulatorManager
+import kotlinx.coroutines.delay
+import dji.sdk.keyvalue.value.common.LocationCoordinate2D
+import dji.sdk.keyvalue.value.common.LocationCoordinate3D
+import dji.v5.utils.common.LogUtils
 
 class LiveFragment : DJIFragment() {
     private val cameraStreamManager = MediaDataCenter.getInstance().cameraStreamManager
@@ -59,9 +67,14 @@ class LiveFragment : DJIFragment() {
     private var cameraStreamSurface: Surface? = null
     private var cameraStreamWidth = -1
     private var cameraStreamHeight = -1
-    private var cameraStreamScaleType: ICameraStreamManager.ScaleType = ICameraStreamManager.ScaleType.CENTER_INSIDE
+    private var cameraStreamScaleType: ICameraStreamManager.ScaleType =
+        ICameraStreamManager.ScaleType.CENTER_INSIDE
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.frag_live, container, false)
     }
 
@@ -91,6 +104,25 @@ class LiveFragment : DJIFragment() {
         initLiveButton()
         initCameraStream()
         initLiveData()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        lifecycleScope.launchWhenCreated {
+            delay(3000)
+            SimulatorManager.getInstance().enableSimulator(
+                InitializationSettings.createInstance(LocationCoordinate2D(37.0, 117.0), 20),
+                object : CommonCallbacks.CompletionCallback {
+                    override fun onSuccess() {
+
+                    }
+
+                    override fun onFailure(p0: IDJIError) {
+
+                    }
+                }
+            )
+        }
     }
 
     override fun onDestroyView() {
@@ -180,6 +212,7 @@ class LiveFragment : DJIFragment() {
         rgCamera.setOnCheckedChangeListener { group: RadioGroup, checkedId: Int ->
             val view = group.findViewById<View>(checkedId)
             cameraIndex = ComponentIndexType.find((view.tag as String).toInt())
+            Log.d("camera", "cameraIndex = $cameraIndex")
             cameraStreamSurface = svCameraStream.holder.surface
             if (cameraStreamSurface != null && svCameraStream.width != 0) {
                 putCameraStreamSurface()
@@ -233,7 +266,8 @@ class LiveFragment : DJIFragment() {
     private fun initCameraStreamScaleType() {
         rgCameraStreamScaleType.setOnCheckedChangeListener { group: RadioGroup, checkedId: Int ->
             val view = group.findViewById<View>(checkedId)
-            cameraStreamScaleType = ICameraStreamManager.ScaleType.find((view.tag as String).toInt())
+            cameraStreamScaleType =
+                ICameraStreamManager.ScaleType.find((view.tag as String).toInt())
             putCameraStreamSurface()
         }
         rgCameraStreamScaleType.check(R.id.rb_camera_scale_type_center_inside)
@@ -304,7 +338,12 @@ class LiveFragment : DJIFragment() {
     private fun initCameraStream() {
         svCameraStream.holder.addCallback(object : SurfaceHolder.Callback {
             override fun surfaceCreated(holder: SurfaceHolder) {}
-            override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+            override fun surfaceChanged(
+                holder: SurfaceHolder,
+                format: Int,
+                width: Int,
+                height: Int
+            ) {
                 cameraStreamWidth = width
                 cameraStreamHeight = height
                 cameraStreamSurface = holder.surface
@@ -326,7 +365,10 @@ class LiveFragment : DJIFragment() {
 
                 override fun onFailure(error: IDJIError) {
                     ToastUtils.showLongToast(
-                        StringUtils.getResStr(R.string.msg_start_live_stream_failed, error.description())
+                        StringUtils.getResStr(
+                            R.string.msg_start_live_stream_failed,
+                            error.description()
+                        )
                     )
                 }
             });
@@ -445,11 +487,13 @@ class LiveFragment : DJIFragment() {
         val factory = LayoutInflater.from(requireContext())
         val gbConfigView = factory.inflate(R.layout.dialog_livestream_gb28181_config_view, null)
         val etGbServerIp = gbConfigView.findViewById<EditText>(R.id.et_livestream_gb28181_server_ip)
-        val etGbServerPort = gbConfigView.findViewById<EditText>(R.id.et_livestream_gb28181_server_port)
+        val etGbServerPort =
+            gbConfigView.findViewById<EditText>(R.id.et_livestream_gb28181_server_port)
         val etGbServerId = gbConfigView.findViewById<EditText>(R.id.et_livestream_gb28181_server_id)
         val etGbAgentId = gbConfigView.findViewById<EditText>(R.id.et_livestream_gb28181_agent_id)
         val etGbChannel = gbConfigView.findViewById<EditText>(R.id.et_livestream_gb28181_channel)
-        val etGbLocalPort = gbConfigView.findViewById<EditText>(R.id.et_livestream_gb28181_local_port)
+        val etGbLocalPort =
+            gbConfigView.findViewById<EditText>(R.id.et_livestream_gb28181_local_port)
         val etGbPassword = gbConfigView.findViewById<EditText>(R.id.et_livestream_gb28181_password)
 
         val gbConfig = liveStreamVM.getGb28181Settings()
@@ -547,7 +591,8 @@ class LiveFragment : DJIFragment() {
         val factory = LayoutInflater.from(requireContext())
         val agoraConfigView = factory.inflate(R.layout.dialog_livestream_agora_config_view, null)
 
-        val etAgoraChannelId = agoraConfigView.findViewById<EditText>(R.id.et_livestream_agora_channel_id)
+        val etAgoraChannelId =
+            agoraConfigView.findViewById<EditText>(R.id.et_livestream_agora_channel_id)
         val etAgoraToken = agoraConfigView.findViewById<EditText>(R.id.et_livestream_agora_token)
         val etAgoraUid = agoraConfigView.findViewById<EditText>(R.id.et_livestream_agora_uid)
 

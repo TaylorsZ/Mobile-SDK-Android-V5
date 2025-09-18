@@ -86,6 +86,7 @@ class CameraStreamDetailVM : DJIViewModel() {
         }
         DJIExecutor.getExecutor().execute {
             try {
+
                 streamFileOutputStream?.write(data, offset, length)
             } catch (e: Exception) {
                 //do nothing
