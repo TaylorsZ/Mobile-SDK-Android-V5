@@ -2,7 +2,6 @@ package dji.sampleV5.aircraft.pages
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Surface
 import android.view.SurfaceHolder
@@ -25,8 +24,6 @@ import dji.sdk.keyvalue.value.airlink.ChannelPriority
 import dji.sdk.keyvalue.value.camera.CameraVideoStreamSourceType
 import dji.sdk.keyvalue.value.common.ComponentIndexType
 import dji.sdk.keyvalue.value.flightassistant.VisionAssistDirection
-import dji.v5.manager.datacenter.MediaDataCenter
-import dji.v5.manager.datacenter.camera.StreamInfo
 import dji.v5.manager.interfaces.ICameraStreamManager
 import dji.v5.utils.common.LogPath
 import dji.v5.utils.common.LogUtils
@@ -140,9 +137,6 @@ class CameraStreamDetailFragment : DJIFragment() {
 
         initViewModel()
 
-        btnStopDownloadStream.setOnClickListener {
-            viewModel.stopDownloadStreamToLocal()
-        }
         btnSetStreamEncodeBitrate.setOnClickListener {
             KeyValueDialogUtil.showInputDialog(
                 activity, "Stream Encode Bitrate(bps)",
@@ -173,7 +167,6 @@ class CameraStreamDetailFragment : DJIFragment() {
             }
         }
 
-        onOpenOrCloseCheckListener.onClick(btnCloseOrOpen)
 
         if (cameraIndex == ComponentIndexType.VISION_ASSIST || cameraIndex == ComponentIndexType.FPV) {
             mAssistViewDirectionLayout.visibility = View.VISIBLE
@@ -305,7 +298,7 @@ class CameraStreamDetailFragment : DJIFragment() {
     private fun downloadYUVImage() {
         val selectedIndex = arrayOf(-1)
         val formatList = SUPPORT_YUV_FORMAT.keys.toTypedArray()
-        AlertDialog.Builder(requireContext(), R.style.Base_ThemeOverlay_AppCompat_Dialog_Alert)
+        AlertDialog.Builder(requireContext(), androidx.appcompat.R.style.Base_ThemeOverlay_AppCompat_Dialog_Alert)
             .setIcon(android.R.drawable.ic_input_get)
             .setTitle(R.string.title_select_yuv_format)
             .setCancelable(true)
