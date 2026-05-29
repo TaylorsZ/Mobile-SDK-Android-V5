@@ -20,7 +20,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dji.sampleV5.aircraft.R
 import dji.sampleV5.aircraft.models.LiveStreamVM
-import dji.sampleV5.aircraft.util.ToastUtils
+import dji.v5.ux.core.util.ToastUtils
 import dji.sdk.keyvalue.value.common.ComponentIndexType
 import dji.v5.common.callback.CommonCallbacks
 import dji.v5.common.error.IDJIError
